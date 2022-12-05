@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  app1:
+    container_name: app1
+    image: alpine
+    ports:
+      - 8000:8000
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8000"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    command:
+      - sh
+      - -c
+      - |
+        apk add python3 curl
+        python3 -m http.server
+  
+  app2:
+    container_name: app2
+    image: alpine
+    depends_on:
+      app1:
+        condition: service_healthy # service_started, service_completed_successfully
+    command:
+      - sh
+      - -c
+      - |
+        apk add curl
+        curl http://app1:8000
