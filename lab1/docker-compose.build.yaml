@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     container_name: todo-web
-    image: todo-web
+    image: timowang1991/todo-web
     build:
       context: ./web
     ports:
@@ -14,7 +14,7 @@ services:
 
   server:
     container_name: todo-server
-    image: todo-server
+    image: timowang1991/todo-server
     build:
       context: ./server
     ports:
