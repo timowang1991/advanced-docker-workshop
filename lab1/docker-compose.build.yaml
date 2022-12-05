@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  web:
+    container_name: todo-web
+    image: todo-web
+    build:
+      context: ./web
+    ports:
+      - 3000:3000
+    environment:
+      - BE_HOST=todo-server
+      - BE_PORT=3001
+
+  server:
+    container_name: todo-server
+    image: todo-server
+    build:
+      context: ./server
+    ports:
+      - 3001:3001
+    environment:
+      - SQL_HOST=todo-sql
+      - SQL_USER=postgres
+      - SQL_PASSWORD=password
+      - SQL_DATABASE=postgres
+  
+  sql:
+    container_name: todo-sql
+    image: postgres:14-alpine
+    user: postgres
+    volumes:
+      - ./sql/psql_init.sql:/docker-entrypoint-initdb.d/psql_init.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
