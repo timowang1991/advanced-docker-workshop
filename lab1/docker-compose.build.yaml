@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   web:
@@ -6,6 +6,8 @@ services:
     image: timowang1991/todo-web
     build:
       context: ./web
+      # platforms:
+      #   - linux/amd64
     ports:
       - 3000:3000
     environment:
@@ -17,6 +19,8 @@ services:
     image: timowang1991/todo-server
     build:
       context: ./server
+      # platforms:
+      #   - linux/amd64
     ports:
       - 3001:3001
     environment:
