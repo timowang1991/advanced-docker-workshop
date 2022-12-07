@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  todo-web:
+    image: timowang1991/todo-web
+    ports:
+      - 3000:3000
+    environment:
+      - BE_HOST=todo-server
+      - BE_PORT=3001
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  todo-server:
+    image: timowang1991/todo-server
+    ports:
+      - 3001:3001
+    environment:
+      - SQL_HOST=todo-sql
+      - SQL_USER=postgres
+      - SQL_PASSWORD=password
+      - SQL_DATABASE=postgres
+    deploy:
+      replicas: 3
+      placement:
+        constraints:
+          - node.role == manager
+
+
+  todo-sql:
+    image: postgres:14-alpine
+    user: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./sql/psql_init.sql:/docker-entrypoint-initdb.d/psql_init.sql
+    ports:
+      - 5432:5432
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
